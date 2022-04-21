@@ -8,7 +8,8 @@
 	<script>
 
 		/** VERSION custom Graphql call 
-		 *
+		 * source: https://www.christhefreelancer.com/shopify-storefront-api/
+		 * 
 		 * Some product IDs
 		 * 
 		 * 	7617693745394'; // fusilloni all'albume
@@ -17,23 +18,8 @@
 		 * 	7633153425650'; // product with variants
 		 *
 		 */
-		 let shopifyID = 7633153425650;
+		let shopifyProductID = 7633153425650;
 		
-		// working -- https://www.christhefreelancer.com/shopify-storefront-api/
-
-		/*
-		const query = `{ shop { name } }`; 
-		function apiCall(query) { 
-			return fetch('https://radicex.myshopify.com/api/2022-04/graphql.json', 
-		    	{ method: 'POST', 
-		          headers: { 'Content-Type': 'application/graphql', 
-		                     'X-Shopify-Storefront-Access-Token': "8300d91d004983dbec524bf265e21c13" 
-		                   },
-		          "body": query })
-		          .then(response => response.json()); } 
-		apiCall(query).then(response => { console.log(response) });
-		*/
-
 		function apiCall(query) { 
 			return fetch('https://radicex.myshopify.com/api/2022-04/graphql.json', 
 		    	{ 
@@ -47,7 +33,9 @@
 		    .then(response => response.json()); 
 		};
 
-		function getProduct(shopifyID) { 
+		/* @Mikita: how do I pass the shopifyProductID inside the const query? */
+
+		function getProduct(shopifyProductID) { 
 			const query = `
 			{
 			  products(first: 1, query: "id:7633153425650") {
