@@ -5,225 +5,139 @@
             <div class="overlay absolute hidden h-full w-full md:block" style="background: rgba(0,0,0,.1)">
             <!-- Panel -->
             <div class="panel absolute right-0 h-full w-full max-w-md">
-                <div class="h-full w-full overflow-y-scroll bg-white px-4 pt-4">
-                    <button @click="cartReady = !cartReady" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full pt-1">Close</button>
-                    <p>Hello world!</p>
-                    <p>Hello world!</p>
-                    <p>Hello world!</p>
-                    <p>Hello world!</p>
-                <shopping-cart inline-template :items="cartItems">
-                    <div v-if="items.length > 0">               
-                    <!-- ################################################################# >> -->
-                    <div class="card">
-                        <div class="row">
-                        <div class="col-md-12 cart">
-                            <div class="title">
-                                <div class="row">
-                                    <div class="col">
-                                        <h4><b>Shopping Cart</b></h4>
-                                    </div>
-                                    <div class="col align-self-center text-right text-muted">{{ items.length }} items</div>
-                                </div>
-                            </div>
-                            <div class="row border-top border-bottom" v-for="(item, index) in items">
-                                <div class="row main align-items-center">
-                                    <div class="col-2">                                  
-                                        <img class="img-fluid" :src="item.product.images && item.product.images[0].file.url" alt="">
-                                    </div>
-                                    <div class="col">
-                                        <small class="row font-bold-9">{{ item.product && item.product.name }}</small>
-                                        <div class="row text-muted font-bold-9">Taglia: {{ item.options.filter( x => x.name === 'Taglia')[0].value }}</div>
-                                        <div class="row text-muted font-bold-9">Colore: {{ item.options.filter( x => x.name === 'Colore')[0].value }}</div>
-                                        <div class="row text-muted font-bold-9">Minuteria: {{ item.options.filter( x => x.name === 'Minuteria')[0].value }}</div>
-                                    </div>
-                                    <div class="col d-flex justify-content-center"> 
-                                        <button @click="updateProduct(item.id, item.quantity-1)" :class='{"blur": !(item.quantity*1-1)}'>
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
-                                        </svg>
-                                        </button>
-                                        <button class="border">{{ item.quantity }}</button>
-                                        <button @click="updateProduct(item.id, item.quantity+1)"><!-- +1 -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
-                                        </svg>
-                                        </button> 
-                                    </div>
-                                    <div class="col d-flex">
-                                        <h6 class="m-0">{{ item.price }} {{ currency }}</h6>
-                                        <button @click="removeProduct(index, item.id)">                          
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                                        </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>                    
+                <div class="h-full w-full overflow-y-scroll bg-white px-6 pt-4">
+                    
+                  <button @click="cartReady = !cartReady" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full pt-1">Close</button>
+
+                  <div v-if="cartItems.length > 0 && !isEmpty(product)" class="pt-4">               
+                    <!-- product ################################################################# >> -->
+                    <div class="w-100 px-1" v-for="(item, index) in cartItems" :key="index">                                     
+                      
+                      <!-- <div class="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5"> -->
+                      <div class="w-100 items-center hover:bg-gray-100 -mx-8 px-6 py-5">                          
+                        <div class="flex w-5/5 pb-1">
+                          <span class="font-bold text-sm">{{ product.node.title }} -- {{  getTitleByPid( item.node.merchandise.id ) }}</span>                        
                         </div>
-                        <div class="col-md-12 summary">
-                            <div>
-                            <h5><b>Summary</b></h5>
+                        <div class="flex items-center">
+                          <div class="flex w-2/5"> 
+                            <div class="w-20">                            
+                              <img class="h-24" :src="getImgByPid( item.node.merchandise.id )" alt="">
                             </div>
-                            <hr>
-                            <div class="row">
-                            <div v-show="items.length === 0" class="col-12">
+                            <div class="flex flex-col justify-between ml-4 flex-grow">                            
+                              <!-- <span class="font-bold text-sm">{{ product.node.title }} {{  getTitleByPid( item.node.merchandise.id ) }}</span> -->
+                              <span class="text-red-500 text-xs">{{ getTitleByPid( item.node.merchandise.id ) }}</span>
+                              <!-- Remove icon >> ################################################################ -->
+                              <svg @click="updateCart(item.node.id, 0); loading=true" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 cursor-pointer" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                              </svg>
+                            </div>
+                          </div>
+                          <div class="flex justify-center w-1/5">                          
+                            <svg @click="updateCart(item.node.id, item.node.quantity-1); loading=true" class="fill-current text-gray-600 w-4 cursor-pointer" viewBox="0 0 448 512">
+                              <path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/>
+                            </svg>
+
+                            <label class="mx-2 border text-center w-8" type="text">{{ item.node.quantity }}</label>
+
+                            <svg @click="updateCart(item.node.id, item.node.quantity+1); loading=true" class="fill-current text-gray-600 w-4 cursor-pointer" viewBox="0 0 448 512">
+                              <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/>
+                            </svg>                          
+                          </div>
+                          <span class="text-center w-1/5 font-semibold text-sm">{{ getPriceByPid( item.node.merchandise.id ) }} {{ currency }}</span>
+                          <span class="text-center w-1/5 font-semibold text-sm">{{ getPriceByPid( item.node.merchandise.id )*item.node.quantity }} {{ currency }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- ##############################  >> -->
+                    <div class="card">
+                      <div class="w-100 summary">
+                        <div><h5><b>Summary</b></h5></div>
+                        <hr>
+                        <div class="w-100 pt-4" >
+                          <div v-if="loading">
+                            <svg v-if="" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin:auto;background:#fff;" width="48px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                              <g transform="rotate(0 50 50)">
+                                <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fe718d">
+                                  <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.9166666666666666s" repeatCount="indefinite"></animate>
+                                </rect>
+                              </g><g transform="rotate(30 50 50)">
+                                <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fe718d">
+                                  <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.8333333333333334s" repeatCount="indefinite"></animate>
+                                </rect>
+                              </g><g transform="rotate(60 50 50)">
+                                <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fe718d">
+                                  <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.75s" repeatCount="indefinite"></animate>
+                                </rect>
+                              </g><g transform="rotate(90 50 50)">
+                                <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fe718d">
+                                  <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.6666666666666666s" repeatCount="indefinite"></animate>
+                                </rect>
+                              </g><g transform="rotate(120 50 50)">
+                                <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fe718d">
+                                  <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5833333333333334s" repeatCount="indefinite"></animate>
+                                </rect>
+                              </g><g transform="rotate(150 50 50)">
+                                <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fe718d">
+                                  <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.5s" repeatCount="indefinite"></animate>
+                                </rect>
+                              </g><g transform="rotate(180 50 50)">
+                                <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fe718d">
+                                  <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.4166666666666667s" repeatCount="indefinite"></animate>
+                                </rect>
+                              </g><g transform="rotate(210 50 50)">
+                                <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fe718d">
+                                  <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.3333333333333333s" repeatCount="indefinite"></animate>
+                                </rect>
+                              </g><g transform="rotate(240 50 50)">
+                                <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fe718d">
+                                  <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.25s" repeatCount="indefinite"></animate>
+                                </rect>
+                              </g><g transform="rotate(270 50 50)">
+                                <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fe718d">
+                                  <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.16666666666666666s" repeatCount="indefinite"></animate>
+                                </rect>
+                              </g><g transform="rotate(300 50 50)">
+                                <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fe718d">
+                                  <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="-0.08333333333333333s" repeatCount="indefinite"></animate>
+                                </rect>
+                              </g><g transform="rotate(330 50 50)">
+                                <rect x="47" y="24" rx="3" ry="6" width="6" height="12" fill="#fe718d">
+                                  <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1s" begin="0s" repeatCount="indefinite"></animate>
+                                </rect>
+                              </g>
+                            </svg>
+                          </div>
+                          <div v-else>
+                            <div v-show="cartItems.length === 0" class="col-12">
                                 <h4 class="text-center">Cart is empty</h4>
                             </div>
-                            <div v-show="items.length > 0" class="col-12">                      
-                                <h6>Discount: {{ discount_total | formatCurrency }} {{ currency }}</h6>
+                            <div v-show="estimatedCost.totalTaxAmount" class="col-12">                      
+                                <h6>Tax: {{ estimatedCost.totalTaxAmount | formatCurrency }} {{ currency }}</h6>
                             </div>
-                            <div v-show="items.length > 0" class="col-12">                      
-                                <h6>Sub-Total: {{ sub_total | formatCurrency }} {{ currency }}</h6>
+                            <div v-show="cartItems.length > 0" class="col-12">                      
+                                <h6>Sub Total: {{ estimatedCost.subtotalAmount.amount | formatCurrency }} {{ estimatedCost.subtotalAmount.currencyCode }}</h6>
                             </div>
-                            <div v-show="items.length > 0" class="col-12">                      
-                                <h6>Grand-Total: {{ grand_total | formatCurrency }} {{ currency }}</h6>
+                            <div v-show="cartItems.length > 0" class="col-12">                      
+                                <h6>Grand Total: {{ estimatedCost.totalAmount.amount | formatCurrency }} {{ estimatedCost.totalAmount.currencyCode }}</h6>
                             </div>
-                            <div v-if="Object.keys(shipping).length">                      
-                                <h6>Shipping: {{ shipping }}</h6>                   
-                            </div>
-                            </div>
+                          </div>
+                          <div v-if="checkoutUrl" class="mx-auto text-center mt-8">
+                            <a :href="checkoutUrl" class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-16 pt-2 cursor-pointer">CHECKOUT</a>                                
+                          </div>
                         </div>
-                        </div>              
+                      </div>
                     </div>
                     <!-- << ################################ -->
-
-                    </div>              
-                </shopping-cart>  
+                  </div>
+                  <div v-else class="text-center pt-4">
+                    <h4 class="text-3xl font-normal leading-normal mt-0 mb-2 text-slate-800">
+                      Empty Cart!
+                    </h4>
+                  </div>      
 
                 </div>
-            </div>
+              </div>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-// The shopping cart component
-Vue.component('shopping-cart', {
-  props: ['items'], 
-
-  computed: {
-    sub_total() {  
-
-      let total = 0;
-      this.items.forEach(item => {
-        total += item.price * item.quantity;         
-      });     
-
-      return total;
-    },
-
-    grand_total(){
-      let total = 0;
-      this.items.forEach(item => {        
-        total += item.price * item.quantity - ( item.discount_each * item.quantity );
-      });
-      return total; 
-    },
-
-    discount_total(){
-      let total = 0;
-      this.items.forEach(item => {
-        total += item.discount_each * item.quantity;        
-      });
-      return total; 
-    }
-
-  },
-  
-  methods: {
-    // Remove item by its product ID    
-    removeProduct(index, pid) {
-      
-      this.items.splice(index, 1);
-      let xx = vm;
-      try{
-        swell.cart.removeItem(pid).then( res => { 
-             
-            xx.shipping       = res.shipping;      
-            xx.cartItems      = res.items;
-            xx.currency       = res.currency;
-            xx.sub_total 	    = res.sub_total,
-            xx.grand_total 	  = res.grand_total,
-            xx.discount_total = res.discount_total
-
-          }); 
-      }catch( error ){
-        console.log(error);
-      }
-    },
-
-    updateProduct(pid, count){      
-      let xx = vm;      
-        swell.cart.updateItem(pid, {
-          quantity: count
-        }).then( res => {
-          
-          xx.shipping       = res.shipping;      
-          xx.cartItems      = res.items;
-          xx.currency       = res.currency;
-          xx.sub_total 	    = res.sub_total,
-          xx.grand_total 	  = res.grand_total,
-          xx.discount_total = res.discount_total
-        }
-      );
-    } 
-  } 
-
-});
-
-
-// const vm = new Vue({
-//   el: '#app',
-//   data: {
-//     cartItems: [],
-//     items: [],
-//     cartReady: false, 
-//     quantity: 0,
-//     currency: 'Euro',
-//     sub_total: 0,
-//     grand_total: 0,
-//     discount_total: 0,
-//     shipping: {}
-//   }, 
-
-//   methods: {
-//     // Add Items to cart
-//     addToCart(item, cls) {       
-      
-//       let qty = document.querySelector(`.${cls}`).value;
-//       if(!qty){
-//         alert('Qty should be over 1'); return;
-//       } 
-
-//       let taglia    = item.options.filter( x => x.name === 'Taglia')[0].values[0].name;
-//       let colore    = item.options.filter( x => x.name === 'Colore')[0].values[0].name;
-//       let minuteria = item.options.filter( x => x.name === 'Minuteria')[0].values[0].name;
-      
-//       let xx = this;     
-//       window.swell.cart.addItem({
-//           product_id: item.id,
-//           quantity: qty*1,
-//           options: {
-//             taglia:    taglia,
-//             colore:    colore,
-//             minuteria: minuteria
-//           }
-//         }).then( res => {    
-                
-//           xx.shipping       = res.shipping;      
-//           xx.cartItems      = res.items;
-//           xx.currency       = res.currency;
-//           xx.sub_total 	    = res.sub_total;
-//     		  xx.grand_total 	  = res.grand_total;
-// 			    xx.discount_total = res.discount_total;
-//         });            
-//       this.cartReady = true;
-//     } 
-//   },  
-//   computed: {
-//     quantity: function(e){      
-//     }
-//   }
-// });
-</script>
