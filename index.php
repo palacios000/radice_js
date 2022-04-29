@@ -53,15 +53,15 @@
 					<li>
 						<a href="#" class="block py-2 pr-4 pl-3 text-gray-700 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">JOURNAL</a>
 					</li>
-					<!-- <div>						
+					<div>						
 						<button class="cart-link cursor-pointer" onclick="vm.cartReady=true;">
 							<i class="fa fa-shopping-cart">							
-								<span style="" class="cart-counter">
-									<span>{{ vm.cartItems.length }}</span>
+								<span class="cart-counter">									
+									<span id="cart-counter">0</span>
 								</span>
 							</i>
 						</button>					
-					</div> -->
+					</div>
 				</ul>
 			</div>
 		</div>
@@ -69,13 +69,13 @@
 	<div class="container mx-auto px-16 pt-4 bg-slate-200 pb-32">
 		<div id="app">
 			<div class="absolute shopping-cart">						
-				<button class="cart-link cursor-pointer" @click="cartReady=true;">
+				<!-- <button class="cart-link cursor-pointer" @click="cartReady=true;">
 					<i class="fa fa-shopping-cart">							
 						<span style="" class="cart-counter">
 							<span>{{ cartItems.length }}</span>
 						</span>
 					</i>
-				</button>					
+				</button>					 -->
 			</div>			
 			<div class="grid grid-cols-2" v-if="!isEmpty(product)">
 				<div class="w-50">
@@ -168,7 +168,8 @@
 	
 	this.getProduct(this.shopifyID);
 	getCookie('cartID') && this.retrieve( getCookie('cartID') );
-	
+	//		
+	document.getElementById('cart-counter').innerText = this.cartItems.length
   },
   methods: {
 	async getProduct(id) { 
@@ -632,13 +633,17 @@
     },	
   },
   watch: {	
-	product: function(val){
-		debugger
+	product: function(val){		
 		this.isStockShow = val.node.totalInventory
 	},
 	"product.node.variants.edges": function(val){
 		this.isVariantShow = (val.length && val.length > 1)
+	},
+	cartItems: function(val){
+		
+		document.getElementById('cart-counter').innerText = this.cartItems.length
 	}
+	
   }
 });
 // >> ######################################################
