@@ -124,7 +124,7 @@
 					</div>
 					<div class="w-100 pt-8">
 						<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-								@click="addToCart(sltObject.node.id, 1)">
+								@click="addToCart(sltObject.node.id, 1); cartReady=true;">
 							Add to cart
 						</button>
 					</div>
@@ -144,7 +144,7 @@
  const vm = new Vue({
   el: '#app',
   data: {
-	shopifyID:7617693745394,	    
+	shopifyID:7633153425650,	    
     items: [],
     cartReady: false, 
     quantity: 0,
@@ -273,7 +273,14 @@
 								quantity
 								merchandise {
 									... on ProductVariant {
-									id
+										id
+										title
+										priceV2 {
+											amount
+										}
+										image {
+											url
+										}
 									}
 								}
 								attributes {
@@ -330,7 +337,7 @@
 		this.loading=false
 	},
 	async addToCart(pid, qty){
-
+				
 		let onCart = this.cartItems.filter( x => x.node.merchandise.id === pid);
 
 		if(onCart.length){// update cart
@@ -365,7 +372,15 @@
 									quantity
 									merchandise {
 										... on ProductVariant {
-										id
+											id
+											title
+											priceV2 {
+												amount
+											}
+											image {
+												url
+											}
+											
 										}
 									}
 									attributes {
@@ -447,7 +462,15 @@
 									quantity
 									merchandise {
 										... on ProductVariant {
-										id
+											id
+											title
+											priceV2 {
+												amount
+											}
+											image {
+												url
+											}
+																		
 										}
 									}
 									attributes {
@@ -520,43 +543,50 @@
 				createdAt
 				updatedAt
 				lines(first: 10) {
-				edges {
-					node {
-					id
-					quantity
-					merchandise {
-						... on ProductVariant {
-						id
+					edges {
+						node {
+							id														
+							quantity
+							merchandise {
+								... on ProductVariant {
+										id
+										title
+										priceV2 {
+											amount
+										}
+										image {
+											url
+										}
+								}
+							}
+							attributes {
+								key
+								value
+							}
 						}
 					}
-					attributes {
-						key
-						value
-					}
-					}
-				}
 				}
 				attributes {
-				key
-				value
+					key
+					value
 				}
 				estimatedCost {
-				totalAmount {
-					amount
-					currencyCode
-				}
-				subtotalAmount {
-					amount
-					currencyCode
-				}
-				totalTaxAmount {
-					amount
-					currencyCode
-				}
-				totalDutyAmount {
-					amount
-					currencyCode
-				}
+					totalAmount {
+						amount
+						currencyCode
+					}
+					subtotalAmount {
+						amount
+						currencyCode
+					}
+					totalTaxAmount {
+						amount
+						currencyCode
+					}
+					totalDutyAmount {
+						amount
+						currencyCode
+					}
 				}
 				buyerIdentity {
 				email
@@ -567,6 +597,7 @@
 				countryCode
 				}
 			}
+			
 		}`;
 
 		//
@@ -606,17 +637,7 @@
 		}
 		
 		return JSON.stringify(obj) === JSON.stringify({});
-	}, 	
-	getImgByPid(productID){
-		
-		let pd = this.product.node.variants.edges.filter( x => x.node.id === productID);
-		return !this.isEmpty(pd) ? pd[0].node.image.url : '';		
-	},   
-	getTitleByPid(productID){
-		
-		let pd = this.product.node.variants.edges.filter( x => x.node.id === productID);
-		return !this.isEmpty(pd) ? pd[0].node.title : '';		
-	},   
+	}, 		   	   
 	getONameByPid(productID){
 		
 		let pd = this.product.node.variants.edges.filter( x => x.node.id === productID);
