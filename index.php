@@ -144,7 +144,7 @@
  const vm = new Vue({
   el: '#app',
   data: {
-	shopifyID:7633153425650,	    
+	shopifyID:7633154572530,	    
     items: [],
     cartReady: false, 
     quantity: 0,
@@ -337,7 +337,7 @@
 		this.loading=false
 	},
 	async addToCart(pid, qty){
-				
+
 		let onCart = this.cartItems.filter( x => x.node.merchandise.id === pid);
 
 		if(onCart.length){// update cart
