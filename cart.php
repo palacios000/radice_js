@@ -16,7 +16,7 @@
                       <!-- <div class="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5"> -->
                       <div class="w-100 items-center hover:bg-gray-100 -mx-8 px-6 py-5">                          
                         <div class="flex w-5/5 pb-1">
-                          <span class="font-bold text-sm">{{ product.node.title }} -- {{  item.node.merchandise.title.replace('Default Title', '') }}</span>
+                          <span class="font-bold text-sm">{{ product.node.title }} {{  item.node.merchandise.title.replace('Default Title', '') }}</span>
                         </div>
                         <div class="flex items-center">
                           <div class="flex w-2/5"> 

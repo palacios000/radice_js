@@ -122,7 +122,7 @@
 							{{ product.node.totalInventory }} in Stock							
 						</div>
 					</div>
-					<div class="w-100 pt-8">
+					<div v-if="isStockShow" class="w-100 pt-8">
 						<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
 								@click="addToCart(sltObject.node.id, 1); cartReady=true;">
 							Add to cart
@@ -144,7 +144,7 @@
  const vm = new Vue({
   el: '#app',
   data: {
-	shopifyID:7633154572530,	    
+	shopifyID:7617693745394,	    
     items: [],
     cartReady: false, 
     quantity: 0,
