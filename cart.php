@@ -2,14 +2,14 @@
     <div v-if="cartReady" >    
         <div class="fixed inset-0 z-50">
             <!-- Overlay -->
-            <div class="overlay absolute hidden h-full w-full md:block" style="background: rgba(0,0,0,.1)">
+            <div :class="isMobile ? '' : 'overlay absolute hidden h-full w-full md:block'" style="background: rgba(0,0,0,.1)">
             <!-- Panel -->
             <div class="panel absolute right-0 h-full w-full max-w-md">
                 <div class="h-full w-full overflow-y-scroll bg-white px-6 pt-4">
                     
                   <button @click="cartReady = !cartReady" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full pt-1">Close</button>
 
-                  <div v-if="cartItems.length > 0 && !isEmpty(product)" class="pt-4">               
+                  <div v-if="cartItems.length > 0" class="pt-4">               
                     <!-- product ################################################################# >> -->
                     <div class="w-100 px-1" v-for="(item, index) in cartItems" :key="index">                                     
                       
@@ -120,7 +120,28 @@
                                 <h6>Grand Total: {{ estimatedCost.totalAmount.amount | formatCurrency }} {{ estimatedCost.totalAmount.currencyCode }}</h6>
                             </div>
                           </div>
-                          <div v-if="checkoutUrl" class="mx-auto text-center mt-8">
+                          <!-- wrapping gift -->
+                          <div class="row pt-12">
+                            <div class="md:flex md:items-center mb-2">
+                              <label class="block text-gray-500 font-bold">
+                                <input class="mr-2 leading-tight" 
+                                       type="checkbox"
+                                       v-model="wrapper"
+                                       @click="wrapGiftFunc">
+                                <span class="text-sm">
+                                  For €10, please wrap the products in this order!
+                                </span>
+                              </label>
+                            </div>                            
+                          </div>
+                          <div class="row">
+                            <label for="message" class="block mb-2 text-sm font-medium text-gray-500 font-bold">* Gift Message (free & optional)</label>
+                            <textarea id="message" rows="2" 
+                                      class="row block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message..."></textarea>
+                          </div>
+                          
+                          <!-- checkout btn -->
+                          <div v-if="checkoutUrl" class="mx-auto items-center text-center my-8 pt-4">
                             <a :href="checkoutUrl" class="bg-gray-700 hover:bg-gray-800 text-white font-bold py-3 px-16 pt-2 cursor-pointer">CHECKOUT</a>                                
                           </div>
                         </div>

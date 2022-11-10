@@ -36,7 +36,7 @@
 				<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
 				<svg class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
 			</button>
-			<div class="hidden w-full md:block md:w-auto mr-32" id="mobile-menu">
+			<div class="hidden w-full md:block md:w-auto" id="mobile-menu">
 				<ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
 					<li>
 						<a href="#" class="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white" aria-current="page">BEVERAGE</a>
@@ -53,29 +53,29 @@
 					<li>
 						<a href="#" class="block py-2 pr-4 pl-3 text-gray-700 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">JOURNAL</a>
 					</li>
-					<div>						
+					<!-- <div>						
 						<button class="cart-link cursor-pointer" onclick="vm.cartReady=true;">
 							<i class="fa fa-shopping-cart">							
-								<span class="cart-counter">									
-									<span id="cart-counter">0</span>
+								<span style="" class="cart-counter">
+									<span>{{ vm.cartItems.length }}</span>
 								</span>
 							</i>
 						</button>					
-					</div>
+					</div> -->
 				</ul>
 			</div>
 		</div>
 	</nav>
 	<div class="container mx-auto px-16 pt-4 bg-slate-200 pb-32">
-		<div id="app" class="hidden">
+		<div id="app">
 			<div class="absolute shopping-cart">						
-				<!-- <button class="cart-link cursor-pointer" @click="cartReady=true;">
+				<button class="cart-link cursor-pointer" @click="cartReady=true;">
 					<i class="fa fa-shopping-cart">							
 						<span style="" class="cart-counter">
 							<span>{{ cartItems.length }}</span>
 						</span>
 					</i>
-				</button>					 -->
+				</button>					
 			</div>			
 			<div class="grid grid-cols-2" v-if="!isEmpty(product)">
 				<div class="w-50">
@@ -99,8 +99,8 @@
 					<!-- Product variants ########################### >> -->
 					<div class="flex pt-32">
 						<div class="w-1/2">
-							<h6 v-if="isVariantShow" class="border-b-4 border-indigo-500 font-bold">{{ product.node.options[0].name }}</h6>
-							<div v-if="isVariantShow" class="flex justify-start pt-4">							
+							<h6 class="border-b-4 border-indigo-500 font-bold">{{ product.node.options[0].name }}</h6>
+							<div class="flex justify-start pt-4">							
 								<div class="form-check-inline flex-1" v-for="(item, key) in product.node.variants.edges" :key="key">
 									<input 	class="form-check-input appearance-none rounded-full h-5 w-5 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain mr-2 cursor-pointer" 
 											type="radio" 
@@ -118,13 +118,13 @@
 								</div>							
 							</div>
 						</div>
-						<div v-if="isStockShow" class="w-1/2 pt-32 text-center">
+						<div class="w-1/2 pt-32 text-center hidden">
 							{{ product.node.totalInventory }} in Stock							
 						</div>
 					</div>
-					<div v-if="isStockShow" class="w-100 pt-8">
+					<div class="w-100 pt-8">
 						<button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-								@click="addToCart(sltObject.node.id, 1); cartReady=true;">
+								@click="addToCart(sltObject.node.id, 1)">
 							Add to cart
 						</button>
 					</div>
@@ -137,20 +137,18 @@
 </body>
 <!-- >> -->
 <script>
-setTimeout(() => {	
-	document.getElementById("app").classList.remove("hidden");
-}, 500);
 /**
  * VM instance load...
  */
+
  const vm = new Vue({
   el: '#app',
   data: {
-	shopifyID:7619001975026,	    
+	shopifyID:7633153425650,	    
     items: [],
     cartReady: false, 
     quantity: 0,
-    currency: 'EUR',
+    currency: 'Euro',
     sub_total: 0,
     grand_total: 0,
     discount_total: 0,	
@@ -162,24 +160,17 @@ setTimeout(() => {
 	checkoutUrl: '',
 	estimatedCost: {},		
 	loading: false,
-	lang: 'IT',
-	isVariantShow: true,
-	isStockShow: false,
-	wrapper: false,
-	gp_id: 'gid://shopify/ProductVariant/43661434126578',
   }, 
   mounted() {
 	
-	this.shopifyID && this.getProduct(this.shopifyID);
+	this.getProduct(this.shopifyID);
 	getCookie('cartID') && this.retrieve( getCookie('cartID') );
-	//		
-	document.getElementById('cart-counter').innerText = this.cartItems.length;	
+	
   },
   methods: {
 	async getProduct(id) { 
 		
 		const query = `
-			query products @inContext(language: ${this.lang})
 			{				
 			  products(first: 1, query: "id:${id}") {
 			    edges {
@@ -277,14 +268,7 @@ setTimeout(() => {
 								quantity
 								merchandise {
 									... on ProductVariant {
-										id
-										title
-										priceV2 {
-											amount
-										}
-										image {
-											url
-										}
+									id
 									}
 								}
 								attributes {
@@ -341,7 +325,7 @@ setTimeout(() => {
 		this.loading=false
 	},
 	async addToCart(pid, qty){
-		
+
 		let onCart = this.cartItems.filter( x => x.node.merchandise.id === pid);
 
 		if(onCart.length){// update cart
@@ -376,15 +360,7 @@ setTimeout(() => {
 									quantity
 									merchandise {
 										... on ProductVariant {
-											id
-											title
-											priceV2 {
-												amount
-											}
-											image {
-												url
-											}
-											
+										id
 										}
 									}
 									attributes {
@@ -466,15 +442,7 @@ setTimeout(() => {
 									quantity
 									merchandise {
 										... on ProductVariant {
-											id
-											title
-											priceV2 {
-												amount
-											}
-											image {
-												url
-											}
-																		
+										id
 										}
 									}
 									attributes {
@@ -547,50 +515,43 @@ setTimeout(() => {
 				createdAt
 				updatedAt
 				lines(first: 10) {
-					edges {
-						node {
-							id														
-							quantity
-							merchandise {
-								... on ProductVariant {
-										id
-										title
-										priceV2 {
-											amount
-										}
-										image {
-											url
-										}
-								}
-							}
-							attributes {
-								key
-								value
-							}
+				edges {
+					node {
+					id
+					quantity
+					merchandise {
+						... on ProductVariant {
+						id
 						}
 					}
+					attributes {
+						key
+						value
+					}
+					}
+				}
 				}
 				attributes {
-					key
-					value
+				key
+				value
 				}
 				estimatedCost {
-					totalAmount {
-						amount
-						currencyCode
-					}
-					subtotalAmount {
-						amount
-						currencyCode
-					}
-					totalTaxAmount {
-						amount
-						currencyCode
-					}
-					totalDutyAmount {
-						amount
-						currencyCode
-					}
+				totalAmount {
+					amount
+					currencyCode
+				}
+				subtotalAmount {
+					amount
+					currencyCode
+				}
+				totalTaxAmount {
+					amount
+					currencyCode
+				}
+				totalDutyAmount {
+					amount
+					currencyCode
+				}
 				}
 				buyerIdentity {
 				email
@@ -601,7 +562,6 @@ setTimeout(() => {
 				countryCode
 				}
 			}
-			
 		}`;
 
 		//
@@ -641,79 +601,28 @@ setTimeout(() => {
 		}
 		
 		return JSON.stringify(obj) === JSON.stringify({});
-	}, 		   	   
+	}, 	
+	getImgByPid(productID){
+		
+		let pd = this.product.node.variants.edges.filter( x => x.node.id === productID);
+		return !this.isEmpty(pd) ? pd[0].node.image.url : '';		
+	},   
+	getTitleByPid(productID){
+		
+		let pd = this.product.node.variants.edges.filter( x => x.node.id === productID);
+		return !this.isEmpty(pd) ? pd[0].node.title : '';		
+	},   
 	getONameByPid(productID){
 		
 		let pd = this.product.node.variants.edges.filter( x => x.node.id === productID);
 		return !this.isEmpty(pd) ? pd[0].node.selectedOptions[0].name : '';		
-	},   
-	getPriceByPid(productID){
-		
-		let pd = this.product.node.variants.edges.filter( x => x.node.id === productID);
-		return !this.isEmpty(pd) ? pd[0].node.priceV2.amount : '';		
-	},
-	isMobile() {
-		
-		let check = false;
-		(function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
-		return check;
-	},
-	wrapGiftFunc(){
-
-		let gfCart = this.cartItems.filter( x => x.node.merchandise.id === this.gp_id);
-
-		if(!gfCart.length){
-
-			this.addToCart(this.gp_id, 1);
-		}else{
-
-			this.updateCart(gfCart[0].node.id, 0); 			
-		}
-	},
-	checkWrapped(){
-		
-		if( this.isEmpty(this.cartItems) ){
-			this.wrapper = false;
-		}else{
-			let ww = this.cartItems.filter( x => x.node.merchandise.id === this.gp_id);
-			if(ww.length){
-				this.wrapper = true;
-			}else{
-				this.wrapper = false;
-			}
-		} 
-
-	}
+	},   	   	   
   },  
   computed: {
     quantity: function(e){      
     },	
   },
   watch: {	
-	product: function(val){		
-		this.isStockShow = val.node.totalInventory
-	},
-	"product.node.variants.edges": function(val){
-		this.isVariantShow = (val.length && val.length > 1)
-	},
-	cartItems: function(val){
-		
-		//
-		document.getElementById('cart-counter').innerText = this.cartItems.length;
-
-		//wrapper init
-		if( this.isEmpty(val) ){
-			this.wrapper = false;
-		}else{
-			let ww = val.filter( x => x.node.merchandise.id === this.gp_id);
-			if(ww.length){
-				this.wrapper = true;
-			}else{
-				this.wrapper = false;
-			}
-		} 
-	}
-	
   }
 });
 // >> ######################################################
